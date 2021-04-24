@@ -39,7 +39,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.apache.shiro.realm.ldap.DefaultLdapRealm;
@@ -49,10 +48,10 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.JdbcUtils;
 import org.apache.shiro.util.ThreadContext;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.realm.ActiveDirectoryGroupRealm;
 import org.apache.zeppelin.realm.LdapRealm;
-import org.apache.zeppelin.realm.jwt.KnoxJwtRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +77,7 @@ public class ShiroAuthenticationService implements AuthenticationService {
     if (conf.getShiroPath().length() > 0) {
       try {
         Collection<Realm> realms =
-            ((DefaultSecurityManager) org.apache.shiro.SecurityUtils.getSecurityManager())
+            ((DefaultWebSecurityManager) org.apache.shiro.SecurityUtils.getSecurityManager())
                 .getRealms();
         if (realms.size() > 1) {
           boolean isIniRealmEnabled = false;
@@ -139,8 +138,8 @@ public class ShiroAuthenticationService implements AuthenticationService {
   @Override
   public Collection<Realm> getRealmsList() {
     String key = ThreadContext.SECURITY_MANAGER_KEY;
-    DefaultSecurityManager defaultSecurityManager = (DefaultSecurityManager) ThreadContext.get(key);
-    return defaultSecurityManager.getRealms();
+    DefaultWebSecurityManager defaultWebSecurityManager = (DefaultWebSecurityManager) ThreadContext.get(key);
+    return defaultWebSecurityManager.getRealms();
   }
 
   /** Checked if shiro enabled or not. */
@@ -221,7 +220,7 @@ public class ShiroAuthenticationService implements AuthenticationService {
   @Override
   public Set<String> getAssociatedRoles() {
     Subject subject = org.apache.shiro.SecurityUtils.getSubject();
-    Set<String> roles = new HashSet<>();
+    HashSet<String> roles = new HashSet<>();
     Map<String, String> allRoles = null;
 
     if (subject.isAuthenticated()) {
@@ -247,9 +246,6 @@ public class ShiroAuthenticationService implements AuthenticationService {
           break;
         } else if (ACTIVE_DIRECTORY_GROUP_REALM.equals(name)) {
           allRoles = ((ActiveDirectoryGroupRealm) realm).getListRoles();
-          break;
-        } else if (realm instanceof KnoxJwtRealm) {
-          roles = ((KnoxJwtRealm) realm).mapGroupPrincipals(getPrincipal());
           break;
         }
       }
