@@ -18,6 +18,7 @@ package org.apache.zeppelin.integration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zeppelin.AbstractZeppelinIT;
+import org.apache.zeppelin.integration.AuthenticationIT;
 import org.apache.zeppelin.WebDriverManager;
 import org.apache.zeppelin.ZeppelinITUtils;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
@@ -39,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -71,7 +74,7 @@ public class PersonalizeActionsIT extends AbstractZeppelinIT {
     try {
       System.setProperty(ZeppelinConfiguration.ConfVars.ZEPPELIN_HOME.getVarName(), new File("../").getAbsolutePath());
       ZeppelinConfiguration conf = ZeppelinConfiguration.create();
-      shiroPath = conf.getAbsoluteDir(String.format("%s/shiro.ini", conf.getConfDir()));
+      shiroPath = conf.getRelativeDir(String.format("%s/shiro.ini", conf.getConfDir()));
       File file = new File(shiroPath);
       if (file.exists()) {
         originalShiro = StringUtils.join(FileUtils.readLines(file, "UTF-8"), "\n");

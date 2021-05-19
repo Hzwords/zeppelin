@@ -41,7 +41,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.URI;
+<<<<<<< HEAD
 import java.nio.charset.StandardCharsets;
+=======
+import java.nio.file.Paths;
+>>>>>>> parent of 6a3e84bd1 ([ZEPPELIN-4910]. Don‘t convert relative path to local absolute path when using hadoop filesystem)
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -108,7 +112,7 @@ public class HeliumBundleFactory {
   @Inject
   public HeliumBundleFactory(ZeppelinConfiguration conf) {
     this.heliumLocalRepoDirectory =
-        new File(conf.getAbsoluteDir(ConfVars.ZEPPELIN_DEP_LOCALREPO), HELIUM_LOCAL_REPO);
+        new File(conf.getRelativeDir(ConfVars.ZEPPELIN_DEP_LOCALREPO), HELIUM_LOCAL_REPO).getAbsoluteFile();
     this.heliumBundleDirectory = new File(heliumLocalRepoDirectory, HELIUM_BUNDLES_DIR);
     this.heliumLocalModuleDirectory = new File(heliumLocalRepoDirectory, HELIUM_LOCAL_MODULE_DIR);
     this.yarnCacheDir = new File(heliumLocalRepoDirectory, YARN_CACHE_DIR);
@@ -122,17 +126,17 @@ public class HeliumBundleFactory {
 
     this.gson = new Gson();
 
-    File zeppelinWebPath = new File(conf.getAbsoluteDir("zeppelin-web"));
+    File zeppelinWebPath = new File(conf.getRelativeDir("zeppelin-web"));
     if (!zeppelinWebPath.isDirectory()) {
       this.tabledataModulePath =
-          new File(conf.getAbsoluteDir("lib/node_modules/zeppelin-tabledata"));
-      this.visualizationModulePath = new File(conf.getAbsoluteDir("lib/node_modules/zeppelin-vis"));
-      this.spellModulePath = new File(conf.getAbsoluteDir("lib/node_modules/zeppelin-spell"));
+          new File(conf.getRelativeDir("lib/node_modules/zeppelin-tabledata"));
+      this.visualizationModulePath = new File(conf.getRelativeDir("lib/node_modules/zeppelin-vis"));
+      this.spellModulePath = new File(conf.getRelativeDir("lib/node_modules/zeppelin-spell"));
     } else {
-      this.tabledataModulePath = new File(conf.getAbsoluteDir("zeppelin-web/src/app/tabledata"));
+      this.tabledataModulePath = new File(conf.getRelativeDir("zeppelin-web/src/app/tabledata"));
       this.visualizationModulePath =
-          new File(conf.getAbsoluteDir("zeppelin-web/src/app/visualization"));
-      this.spellModulePath = new File(conf.getAbsoluteDir("zeppelin-web/src/app/spell"));
+          new File(conf.getRelativeDir("zeppelin-web/src/app/visualization"));
+      this.spellModulePath = new File(conf.getRelativeDir("zeppelin-web/src/app/spell"));
     }
   }
 

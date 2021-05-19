@@ -38,6 +38,7 @@ import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.conf.ZeppelinConfiguration.ConfVars;
 import org.apache.zeppelin.notebook.Note;
 import org.apache.zeppelin.notebook.NoteInfo;
+import org.apache.zeppelin.notebook.NoteAuth;
 import org.apache.zeppelin.user.AuthenticationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,7 @@ public class VFSNotebookRepo implements NotebookRepo {
     }
 
     if (filesystemRoot.getScheme() == null) { // it is local path
-      File f = new File(conf.getAbsoluteDir(filesystemRoot.getPath()));
+      File f = new File(conf.getRelativeDir(filesystemRoot.getPath()));
       filesystemRoot = f.toURI();
     }
     this.fsManager = VFS.getManager();

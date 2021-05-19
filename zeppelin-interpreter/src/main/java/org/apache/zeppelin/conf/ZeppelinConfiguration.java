@@ -314,7 +314,7 @@ public class ZeppelinConfiguration {
     if (path != null && path.startsWith("/") || isWindowsPath(path)) {
       return path;
     } else {
-      return getAbsoluteDir(
+      return getRelativeDir(
           String.format("%s/%s",
               getConfDir(),
               path));
@@ -346,7 +346,7 @@ public class ZeppelinConfiguration {
     if (path != null && path.startsWith("/") || isWindowsPath(path)) {
       return path;
     } else {
-      return getAbsoluteDir(
+      return getRelativeDir(
           String.format("%s/%s",
               getConfDir(),
               path));
@@ -396,7 +396,7 @@ public class ZeppelinConfiguration {
   }
 
   public String getNotebookDir() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_NOTEBOOK_DIR);
+    return getRelativeDir(ConfVars.ZEPPELIN_NOTEBOOK_DIR);
   }
 
   public String getNotebookRunId() {
@@ -416,11 +416,11 @@ public class ZeppelinConfiguration {
   }
 
   public String getPluginsDir() {
-    return getAbsoluteDir(getString(ConfVars.ZEPPELIN_PLUGINS_DIR));
+    return getRelativeDir(getString(ConfVars.ZEPPELIN_PLUGINS_DIR));
   }
 
   public String getRecoveryDir() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_RECOVERY_DIR);
+    return getRelativeDir(ConfVars.ZEPPELIN_RECOVERY_DIR);
   }
 
   public String getNotebookStorageClass() {
@@ -520,27 +520,27 @@ public class ZeppelinConfiguration {
   }
 
   public String getInterpreterListPath() {
-    return getAbsoluteDir(String.format("%s/interpreter-list", getConfDir()));
+    return getRelativeDir(String.format("%s/interpreter-list", getConfDir()));
   }
 
   public String getInterpreterDir() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_INTERPRETER_DIR);
+    return getRelativeDir(ConfVars.ZEPPELIN_INTERPRETER_DIR);
   }
 
   public String getInterpreterJson() {
     return getString(ConfVars.ZEPPELIN_INTERPRETER_JSON);
   }
 
-  public String getInterpreterSettingPath(boolean absolute) {
-    return getConfigFSDir(absolute) + "/interpreter.json";
+  public String getInterpreterSettingPath() {
+    return getConfigFSDir() + "/interpreter.json";
   }
 
   public String getHeliumConfPath() {
-    return getAbsoluteDir(String.format("%s/helium.json", getConfDir()));
+    return getRelativeDir(String.format("%s/helium.json", getConfDir()));
   }
 
   public String getHeliumRegistry() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_HELIUM_REGISTRY);
+    return getRelativeDir(ConfVars.ZEPPELIN_HELIUM_REGISTRY);
   }
 
   public String getHeliumNodeInstallerUrl() {
@@ -555,8 +555,8 @@ public class ZeppelinConfiguration {
     return getString(ConfVars.ZEPPELIN_HELIUM_YARNPKG_INSTALLER_URL);
   }
 
-  public String getNotebookAuthorizationPath(boolean absolute) {
-    return getConfigFSDir(absolute) + "/notebook-authorization.json";
+  public String getNotebookAuthorizationPath() {
+    return getConfigFSDir() + "/notebook-authorization.json";
   }
 
   public boolean credentialsPersist() {
@@ -567,32 +567,32 @@ public class ZeppelinConfiguration {
     return getString(ConfVars.ZEPPELIN_CREDENTIALS_ENCRYPT_KEY);
   }
 
-  public String getCredentialsPath(boolean absolute) {
-    return getConfigFSDir(absolute) + "/credentials.json";
+  public String getCredentialsPath() {
+    return getConfigFSDir() + "/credentials.json";
   }
 
   public String getShiroPath() {
-    String shiroPath = getAbsoluteDir(String.format("%s/shiro.ini", getConfDir()));
+    String shiroPath = getRelativeDir(String.format("%s/shiro.ini", getConfDir()));
     return new File(shiroPath).exists() ? shiroPath : StringUtils.EMPTY;
   }
 
   public String getInterpreterRemoteRunnerPath() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_INTERPRETER_REMOTE_RUNNER);
+    return getRelativeDir(ConfVars.ZEPPELIN_INTERPRETER_REMOTE_RUNNER);
   }
 
   public String getInterpreterLocalRepoPath() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_INTERPRETER_LOCALREPO);
+    return getRelativeDir(ConfVars.ZEPPELIN_INTERPRETER_LOCALREPO);
   }
 
   public String getInterpreterMvnRepoPath() {
     return getString(ConfVars.ZEPPELIN_INTERPRETER_DEP_MVNREPO);
   }
 
-  public String getAbsoluteDir(ConfVars c) {
-    return getAbsoluteDir(getString(c));
+  public String getRelativeDir(ConfVars c) {
+    return getRelativeDir(getString(c));
   }
 
-  public String getAbsoluteDir(String path) {
+  public String getRelativeDir(String path) {
     if (path != null && (path.startsWith(File.separator) || isWindowsPath(path) || isPathWithScheme(path))) {
       return path;
     } else {
@@ -644,12 +644,13 @@ public class ZeppelinConfiguration {
   }
 
   public String getConfDir() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_CONF_DIR);
+    return getRelativeDir(ConfVars.ZEPPELIN_CONF_DIR);
   }
 
-  public String getConfigFSDir(boolean absolute) {
+  public String getConfigFSDir() {
     String fsConfigDir = getString(ConfVars.ZEPPELIN_CONFIG_FS_DIR);
     if (StringUtils.isBlank(fsConfigDir)) {
+<<<<<<< HEAD
       LOGGER.warn("{} is not specified, fall back to local conf directory {}",
         ConfVars.ZEPPELIN_CONFIG_FS_DIR.varName,  ConfVars.ZEPPELIN_CONF_DIR.varName);
       if (absolute) {
@@ -657,11 +658,16 @@ public class ZeppelinConfiguration {
       } else {
         return getString(ConfVars.ZEPPELIN_CONF_DIR);
       }
+=======
+      LOG.warn(ConfVars.ZEPPELIN_CONFIG_FS_DIR.varName + " is not specified, fall back to local " +
+          "conf directory " + ConfVars.ZEPPELIN_CONF_DIR.varName);
+      return getConfDir();
+>>>>>>> parent of 6a3e84bd1 ([ZEPPELIN-4910]. Don‘t convert relative path to local absolute path when using hadoop filesystem)
     }
     if (getString(ConfVars.ZEPPELIN_CONFIG_STORAGE_CLASS)
                 .equals("org.apache.zeppelin.storage.LocalConfigStorage")) {
       // only apply getRelativeDir when it is LocalConfigStorage
-      return getAbsoluteDir(fsConfigDir);
+      return getRelativeDir(fsConfigDir);
     } else {
       return fsConfigDir;
     }
@@ -778,7 +784,7 @@ public class ZeppelinConfiguration {
   }
 
   public String getZeppelinSearchIndexPath() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_SEARCH_INDEX_PATH);
+    return getRelativeDir(ConfVars.ZEPPELIN_SEARCH_INDEX_PATH);
   }
 
   public boolean isOnlyYarnCluster() {
@@ -840,7 +846,7 @@ public class ZeppelinConfiguration {
   }
 
   public String getK8sTemplatesDir() {
-    return getAbsoluteDir(ConfVars.ZEPPELIN_K8S_TEMPLATE_DIR);
+    return getRelativeDir(ConfVars.ZEPPELIN_K8S_TEMPLATE_DIR);
   }
 
   public String getK8sServiceName() {

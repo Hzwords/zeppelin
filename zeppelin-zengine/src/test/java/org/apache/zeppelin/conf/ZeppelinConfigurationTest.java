@@ -132,6 +132,7 @@ public class ZeppelinConfigurationTest {
   }
 
   @Test
+<<<<<<< HEAD
   public void getConfigFSPath() {
     ZeppelinConfiguration conf = ZeppelinConfiguration.create("zeppelin-test-site.xml");
     conf.setProperty(ConfVars.ZEPPELIN_HOME.getVarName(), "/usr/lib/zeppelin");
@@ -141,6 +142,16 @@ public class ZeppelinConfigurationTest {
     conf.setProperty(ConfVars.ZEPPELIN_CONFIG_STORAGE_CLASS.getVarName(),
         "org.apache.zeppelin.storage.FileSystemConfigStorage");
     assertEquals("conf", conf.getConfigFSDir(false));
+=======
+  public void getConfigFSPath() throws ConfigurationException {
+    System.setProperty(ConfVars.ZEPPELIN_HOME.getVarName(), "/usr/lib/zeppelin");
+    System.setProperty(ConfVars.ZEPPELIN_CONFIG_FS_DIR.getVarName(), "conf");
+    ZeppelinConfiguration conf = new ZeppelinConfiguration(this.getClass().getResource("/zeppelin-test-site.xml"));
+    assertEquals("/usr/lib/zeppelin/conf", conf.getConfigFSDir());
+
+    System.setProperty(ConfVars.ZEPPELIN_CONFIG_STORAGE_CLASS.getVarName(), "org.apache.zeppelin.storage.FileSystemConfigStorage");
+    assertEquals("conf", conf.getConfigFSDir());
+>>>>>>> parent of 6a3e84bd1 ([ZEPPELIN-4910]. Don‘t convert relative path to local absolute path when using hadoop filesystem)
   }
 
   @Test

@@ -49,16 +49,21 @@ public class FileSystemConfigStorage extends ConfigStorage {
 
   public FileSystemConfigStorage(ZeppelinConfiguration zConf) throws IOException {
     super(zConf);
-    String configDir = zConf.getConfigFSDir(false);
-    this.fs = new FileSystemStorage(zConf, configDir);
+    this.fs = new FileSystemStorage(zConf, zConf.getConfigFSDir());
     LOGGER.info("Creating FileSystem: {} for Zeppelin Config", this.fs.getFs().getClass().getName());
-    Path configPath = this.fs.makeQualified(new Path(configDir));
+    Path configPath = this.fs.makeQualified(new Path(zConf.getConfigFSDir()));
     this.fs.tryMkDir(configPath);
     LOGGER.info("Using folder {} to store Zeppelin Config", configPath);
+<<<<<<< HEAD
     this.interpreterSettingPath = fs.makeQualified(new Path(zConf.getInterpreterSettingPath(false)));
     this.authorizationPath = fs.makeQualified(new Path(zConf.getNotebookAuthorizationPath(false)));
     this.credentialPath = fs.makeQualified(new Path(zConf.getCredentialsPath(false)));
     HealthChecks.getHealthCheckLivenessRegistry().register(STORAGE_HEALTHCHECK_NAME, new HdfsHealthCheck(this.fs, configPath));
+=======
+    this.interpreterSettingPath = fs.makeQualified(new Path(zConf.getInterpreterSettingPath()));
+    this.authorizationPath = fs.makeQualified(new Path(zConf.getNotebookAuthorizationPath()));
+    this.credentialPath = fs.makeQualified(new Path(zConf.getCredentialsPath()));
+>>>>>>> parent of 6a3e84bd1 ([ZEPPELIN-4910]. Don‘t convert relative path to local absolute path when using hadoop filesystem)
   }
 
   @Override

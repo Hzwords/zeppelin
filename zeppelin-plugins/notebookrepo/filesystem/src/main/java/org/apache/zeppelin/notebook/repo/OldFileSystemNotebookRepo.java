@@ -35,9 +35,15 @@ public class OldFileSystemNotebookRepo implements OldNotebookRepo {
 
   @Override
   public void init(ZeppelinConfiguration zConf) throws IOException {
+<<<<<<< HEAD
     this.fs = new FileSystemStorage(zConf,
             zConf.getString(ZeppelinConfiguration.ConfVars.ZEPPELIN_NOTEBOOK_DIR));
     LOGGER.info("Creating FileSystem: {} for Zeppelin Notebook.", this.fs.getFs().getClass().getName());
+=======
+    this.fs = new FileSystemStorage(zConf, zConf.getNotebookDir());
+    LOGGER.info("Creating FileSystem: " + this.fs.getFs().getClass().getName() +
+        " for Zeppelin Notebook.");
+>>>>>>> parent of 6a3e84bd1 ([ZEPPELIN-4910]. Don‘t convert relative path to local absolute path when using hadoop filesystem)
     this.notebookDir = this.fs.makeQualified(new Path(zConf.getNotebookDir()));
     LOGGER.info("Using folder {} to store notebook", notebookDir);
     this.fs.tryMkDir(notebookDir);
