@@ -29,7 +29,11 @@ public class FlinkIntegrationTest111 extends FlinkIntegrationTest {
   @Parameterized.Parameters
   public static List<Object[]> data() {
     return Arrays.asList(new Object[][]{
+<<<<<<< HEAD
             {"1.11.3"}
+=======
+            {"1.11.1"}
+>>>>>>> parent of 7ca140977 ([ZEPPELIN-5047]. Upgrade flink to 1.11.2)
     });
   }
 
