@@ -663,6 +663,7 @@ class FlinkScalaInterpreter(val properties: Properties) {
       LOGGER.info("Resume job from checkpoint , checkpointPath = {}", checkpointPath)
       configuration.setString(SavepointConfigOptions.SAVEPOINT_PATH.key(), checkpointPath)
       return
+<<<<<<< HEAD
     }
 
     val userSavepointPath = context.getLocalProperties.getOrDefault(
@@ -676,6 +677,22 @@ class FlinkScalaInterpreter(val properties: Properties) {
     val userSettingSavepointPath = properties.getProperty(SavepointConfigOptions.SAVEPOINT_PATH.key())
     if (StringUtils.isBlank(userSettingSavepointPath)) {
       // remove SAVEPOINT_PATH when user didn't set it via %flink.conf
+=======
+    }
+
+    if (!StringUtils.isBlank(savepointDir)) {
+      val savepointPath = z.angular(context.getParagraphId + "_savepointpath", context.getNoteId, null)
+      if (savepointPath == null) {
+        LOGGER.info("savepointPath is null because it is the first run")
+        // remove the SAVEPOINT_PATH which may be set by last job.
+        configuration.removeConfig(SavepointConfigOptions.SAVEPOINT_PATH)
+      } else {
+        LOGGER.info("Set savepointPath to: " + savepointPath.toString)
+        configuration.setString("execution.savepoint.path", savepointPath.toString)
+      }
+    } else {
+      // remove the SAVEPOINT_PATH which may be set by last job.
+>>>>>>> parent of 567fce2f1 ([hotfix] Remove execution.savepoint.path when savepointPath is empty)
       configuration.removeConfig(SavepointConfigOptions.SAVEPOINT_PATH)
     }
   }
