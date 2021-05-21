@@ -93,10 +93,6 @@ public class SqlSplitter {
       if (singleLineComment && (character == '\n')) {
         singleLineComment = false;
         query.append(character);
-        if (index == (text.length() - 1) && !query.toString().trim().isEmpty()) {
-          // add query when it is the end of sql.
-          queries.add(query.toString());
-        }
         continue;
       }
 
@@ -106,7 +102,7 @@ public class SqlSplitter {
         multiLineComment = false;
       }
 
-      if (character == '\'' && !(singleLineComment || multiLineComment)) {
+      if (character == '\'') {
         if (singleQuoteString) {
           singleQuoteString = false;
         } else if (!doubleQuoteString) {
@@ -114,7 +110,7 @@ public class SqlSplitter {
         }
       }
 
-      if (character == '"' && !(singleLineComment || multiLineComment)) {
+      if (character == '"') {
         if (doubleQuoteString && index > 0) {
           doubleQuoteString = false;
         } else if (!singleQuoteString) {
